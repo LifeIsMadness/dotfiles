@@ -4,7 +4,6 @@ set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set expandtab
-set gfn=:Hack\ 14:
 set number
 set showmatch 
 
