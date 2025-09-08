@@ -14,11 +14,18 @@ COPY_DIR = HOME_DIR / "dotfiles-copy"
 
 def install() -> None:
     COPY_DIR.mkdir(exist_ok=True)
-    for df_name in DOTFILES:
+    for i, df_name in enumerate(DOTFILES):
+        if i > 0:
+            print()
+
         f_path_home = HOME_DIR / df_name
 
         if f_path_home.is_dir():
             print(f"{f_path_home} is a dir")
+            continue
+        
+        if is_dotfile_symlink(df_name, f_path_home):
+            print(f"Symlink pointing to {f_path_home.resolve()} already exists at /home")
             continue
 
         backup_existing_dotfile(df_name, f_path_home)
@@ -46,6 +53,11 @@ def backup_existing_dotfile(df_name: str, f_path_home: Path) -> None:
     else:
         print(f"{f_path_home} moved to {f_path_copy}")
 
+
+def is_dotfile_symlink(df_name: str, f_path_home: Path) -> bool:
+    f_path_curr = CURRENT_DIR / df_name
+    return f_path_home.is_symlink() and f_path_home.resolve() == f_path_curr
+    
 
 if __name__ == "__main__":
     if Path(__file__).resolve().parent != CURRENT_DIR:
